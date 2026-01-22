@@ -29,6 +29,40 @@ SAM 3D Objects is one part of SAM 3D, a pair of models for object and human mesh
 
 Follow the [setup](doc/setup.md) steps before running the following.
 
+## Slurm quickstart (cluster navigation)
+
+This project is often run on a Slurm cluster. Here are the core concepts and the most common commands.
+
+**Concepts**
+- Controller: the login node where you run Slurm commands (`sinfo`, `squeue`).
+- Node: a compute machine (e.g. `gpu01`); jobs run here.
+- Partition: a queue of nodes with shared policies (e.g. `defq`, `a6000`).
+- Job/step: a scheduled unit of work (`sbatch` for batch jobs, `srun` for steps).
+- GRES/TRES: resource labels like GPUs (`gres/gpu=1`) and memory/CPU tracking.
+
+**Find resources**
+- Nodes and state: `sinfo -N -l`
+- Node details (GPUs/CPU/RAM): `scontrol show node gpu01`
+- Your jobs: `squeue -u $USER`
+- Watch your queue: `watch -n 2 "squeue -u $USER -o '%.18i %.9P %.20j %.8T %.10M %.6D %R'"`
+
+**Run work**
+- Interactive shell on a node: `srun -N 1 -n 1 -c 4 --mem=16G --pty bash`
+- Run a command on a specific node: `srun -w gpu01 hostname`
+- Request GPUs (required for `nvidia-smi` to see devices):
+  `srun -w gpu01 --gres=gpu:1 nvidia-smi -L`
+- Batch job (script):
+  `sbatch path/to/job.sh`
+
+**Control jobs**
+- Cancel job: `scancel <jobid>`
+- Inspect job: `scontrol show job <jobid>`
+
+**Resource flags (common)**
+- CPUs: `-c 8` or `--cpus-per-task=8`
+- Memory: `--mem=64G` or `--mem-per-cpu=4G`
+- GPUs: `--gres=gpu:1` (or `--gpus-per-task=1` if configured)
+
 ## Single or Multi-Object 3D Generation
 
 SAM 3D Objects can convert masked objects in an image, into 3D models with pose, shape, texture, and layout. SAM 3D is designed to be robust in challenging natural images, handling small objects and occlusions, unusual poses, and difficult situations encountered in uncurated natural scenes like this kidsroom:

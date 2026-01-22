@@ -1,0 +1,1 @@
+ENV_PREFIX=$MAMBA_ROOT_PREFIX/envs/sam3d-objects
