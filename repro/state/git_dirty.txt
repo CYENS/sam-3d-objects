@@ -1,0 +1,5 @@
+?? SAM3D_SETUP_NOTES.md
+?? download_model.py
+?? repro/
+?? sam3d_env.sh
+?? splat.ply
